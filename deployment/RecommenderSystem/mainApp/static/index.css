@@ -1,0 +1,345 @@
+body{
+    background-color: #ddd4d4;
+}
+
+.navbar{
+    background-color: rgb(59, 58, 58);
+    color: black;
+    min-height: 5vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+}
+
+.navbar span{
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+}
+
+.index{
+    min-height: 87vh;
+}
+
+.index .main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    background-color: rgb(59, 58, 58);
+    margin: 3rem 5rem;
+    border-radius: 2.5rem;
+}
+
+.index .main h1{
+    font-size: 60px;
+    color: white;
+}
+
+.index .main span{
+    font-size: 24px;
+    color: white;
+}
+
+.custom-file-input {
+    font-size: 24px;
+    margin-bottom: 2rem;
+}
+
+.custom-file-input input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom-file-input label {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.7s;
+}
+
+.custom-file-input label:hover {
+    background-color: black;
+}
+
+.custom-file-input span {
+    margin-left: 10px;
+    color: white;
+}
+
+.custom-file-input input:focus + label {
+    outline: 1px solid #3498db;
+    outline-offset: -1px;
+}
+
+.custom-file-input input:active + label {
+    background-color: #2980b9;
+}
+
+.main button{
+    min-width: 10rem;
+    min-height: 2.5rem;
+    cursor: pointer;
+    border: none;
+    background-color: #2980b9;
+    color: white;
+    border-radius: 5px;
+    transition: 0.7s;
+    font-weight:bold;
+    font-size: 20px;
+}
+
+.main button:hover{
+    background-color: black;
+    color: white;
+}
+
+.main .error-message{
+    display: none;
+    color: red;
+}
+
+.processing{
+    min-height: 80vh;
+    max-height: 80vh;
+    background-color: rgb(59, 58, 58);
+    margin: 3rem 5rem;
+    padding: 2rem;
+    border-radius: 2.5rem;
+    display: none;
+}
+
+.custom-hr{
+    display: none;
+    width: 80vw;
+    height: 0.5rem;
+    background-color: gray;
+    border: none;
+    border-radius: 5px;
+}
+
+.processing .chat {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(37, 35, 35);
+    width: 40%;
+    min-height: 80vh;
+    max-height: 80vh;
+    align-items: center;
+    position: relative; 
+    border-radius: 0.5rem;
+    padding-top: 1rem;
+}
+
+.processing .chat .texts {
+    width: 100%;
+    margin: 1rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.processing .chat textarea {
+    justify-content: flex-end; 
+    position: absolute; 
+    bottom: 0; 
+    border: none;
+    background-color: #fff;
+    color: #000;
+    max-width: 85%;
+    min-width: 85%;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 0.5rem;
+    font-size: 16px;
+    min-height: 50px;
+    max-height: 50px;
+    resize: none;
+    padding-right: 4rem;
+}
+
+.processing .chat button{
+    position: absolute; 
+    bottom: 0;
+    right: 0;
+    margin-right: 2.7rem;
+    margin-bottom: 2.2rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    height: auto;
+    width: auto;
+}
+
+.fa{
+    color: rgb(59, 88, 15);
+}
+
+.texts .human-entry .content{
+    background-color: rgb(75, 74, 74);
+    color: white;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    min-height: 10px;
+    padding: 1rem;
+    font-size: 18px;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.texts .bot-entry .content{
+    color: white;
+    margin-bottom: 0.5rem;
+    display: flex;
+    padding: 1rem;
+    font-size: 18px;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.texts .content .human-entry,
+.texts .content .bot-entry {
+    word-wrap: break-word;
+}
+
+.texts .content .user-icon,
+.texts .content .bot-icon {
+    margin-right: 0.5rem;
+}
+
+
+.texts::-webkit-scrollbar {
+    width: 10px;
+}
+
+.texts::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1; 
+    border-radius: 5px;
+}
+
+.texts::-webkit-scrollbar-track {
+    background-color: rgb(75, 74, 74);
+    border-radius: 5px;
+}
+
+#text::-webkit-scrollbar {
+    width: 10px;
+}
+
+#text::-webkit-scrollbar-thumb {
+    background-color: rgb(75, 74, 74); 
+    border-radius: 5px;
+}
+
+#text::-webkit-scrollbar-track {
+    background-color: white;
+    border-radius: 5px;
+}
+
+
+.processing .container {
+    overflow: hidden;
+    margin-left: 2rem;
+    background-color: #000;
+    width: 60%;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(37, 35, 35);
+}
+
+.iframe-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.iframe-slider {
+    display: flex;
+}
+
+.iframe-item {
+    width: 100%;
+    flex: 0 0 auto;
+    margin-right: 20px;
+}
+
+#iframeSelector{
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: 80%;
+    height: 2rem;
+    border-radius: 5px;
+    font-size: 18px;
+    background-color: rgb(75, 74, 74);
+    color: white;
+    border: none;
+    display: none;
+}
+
+#iframeSelector option{
+    background-color: rgb(75, 74, 74);
+    color: white;
+}
+
+#net1{
+    display: none;
+    width: 300%;
+    height: 650px;
+    margin-right: 0.5rem;
+    margin-left: 0.7rem;
+}
+
+#net2{
+    display: none;
+    width: 300%;
+    height: 650px;
+    margin-right: 0.5rem;
+    margin-left: 0.7rem;
+}
+
+#net3{
+    display: none;
+    width: 300%;
+    height: 650px;
+    margin-right: 0.5rem;
+    margin-left: 0.8rem;
+}
+
+#plot2{
+    display: none;
+    width: 300%;
+    height: 650px;
+    margin-right: 0.5rem;
+    margin-left: 0.7rem;
+}
+
+#plot1{
+    display: none;
+    width: 105%;
+    height: 650px;
+    margin-right: 0.5rem;
+    margin-left: 1rem;
+}
+
+#spinner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+}

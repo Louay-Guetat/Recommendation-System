@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommender System</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <navbar class="navbar">
+        <span>Recommender System</span>
+    </navbar>   
+    <div class="index">
+        <div class="main">
+            <h1> GNN based recomendation system</h1>
+            <span> This system <b>takes from you a document to analyse</b> so that can work </span>
+            <br>
+            <span>Please upload your document here </span>
+            <br>
+            <div class="custom-file-input">
+                <input type="file" id="fileInput" onchange="updateLabel()" accept=".pdf" />
+                <label for="fileInput">Choose a file</label>
+                <span id="fileName">No file chosen</span>
+            </div>
+            <button onclick="upload_pdf()"> Analyse </button>
+            <br>
+            <span id="error" class="error-message"> You need to upload a pdf before analysing. </span>
+        </div>
+        <hr id="line" class="custom-hr">
+        <div id="processing" class="processing">
+            <div class="chat">
+                <div id="conversation" class="texts"></div>
+                <textarea id="text"></textarea>
+                <button id='send_button' onclick="send_text()"><i class="fa fa-send"></i></button>
+            </div>
+            <div class="container">       
+                <select id="iframeSelector" onchange="changeIframe()">
+                    <option value="none"> Select Network </option>
+                    <option value="net1">Primary/Secondary Nodes Graph</option>
+                    <option value="net2">Values Graph</option>
+                    <option value="net3">Communities Graph</option>
+                    <option value="plot2">Ploty Spring 3D</option>
+                    <option value="plot1">Chakhbet Chakhabit</option>
+                </select>  
+                <div class="iframe-container">
+                    <div id="spinner" style="display: none;">Loading...</div>
+                    <div class="iframe-slider">
+                        <div id="net1" class="iframe-item">
+                            <iframe id="net1Frame" width="100%" height="100%" style="border: none; border-radius: 5px;" frameborder="0"></iframe>
+                        </div>
+                        <div id="net2" class="iframe-item">
+                            <iframe id="net2Frame" width="100%" height="100%" style="border: none; border-radius: 5px;" frameborder="0"></iframe>
+                        </div>
+                        <div id="net3" class="iframe-item">
+                            <iframe id="net3Frame" width="100%" height="100%" style="border: none; border-radius: 5px;" frameborder="0"></iframe>
+                        </div>
+                        <div id="plot2" class="iframe-item">
+                            <iframe id="plot2Frame" width="100%" height="100%" style="border: none; border-radius: 5px;" frameborder="0"></iframe>
+                        </div>
+                        <div id="plot1" class="iframe-item">
+                            <img id="plot1Frame" alt="Your Image" width="100%" style="border-radius: 5px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+<script>
+    let length = 0;
+
+    function updateLabel() {
+        const fileInput = document.getElementById('fileInput');
+        const fileNameSpan = document.getElementById('fileName');
+        const error = document.getElementById("error");
+        error.style.display = 'none';
+        fileNameSpan.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : 'No file chosen';
+    }
+
+    function upload_pdf(){
+        const pdf = document.getElementById('fileInput');
+        if(pdf.files[0] !== undefined){
+            const processing = document.getElementById('processing');
+            const line = document.getElementById('line');
+            const textInput = document.getElementById('text');
+            processing.style.display = "flex"
+            line.style.display = "block"
+            processing.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(function() {
+                textInput.focus();
+            }, 500);        
+        }else{
+            const error = document.getElementById("error");
+            error.style.display = 'flex';
+        }
+    }
+
+    function send_text() {
+        const textInput = document.getElementById('text');
+        if(textInput.value !== ""){
+            const conversationDiv = document.getElementById('conversation');
+            const send_button = document.getElementById('send_button');
+            
+            const newEntryDiv = document.createElement('div');
+            newEntryDiv.className = 'human-entry'; 
+
+            const content = document.createElement('div');
+            content.className = 'content'; 
+
+            const userIconSpan = document.createElement('span');
+            userIconSpan.className = 'user-icon'; 
+            userIconSpan.innerHTML = '👤:';
+
+            const textSpan = document.createElement('span');
+            textSpan.innerHTML = textInput.value;
+
+            content.appendChild(userIconSpan);
+            content.appendChild(textSpan);
+            newEntryDiv.appendChild(content);
+
+            conversationDiv.appendChild(newEntryDiv);
+            const question = textInput.value;
+            textInput.value = '';
+            send_button.disabled = true;
+            conversationDiv.scrollTop = conversationDiv.scrollHeight;
+            textInput.focus();
+            setTimeout(function() {
+                bot_response(question);
+            }, 3000);
+        }
+    }
+
+    function bot_response(question) {
+        const textInput = document.getElementById('text');
+        const conversationDiv = document.getElementById('conversation');
+        const send_button = document.getElementById('send_button');
+        const options = document.getElementById('iframeSelector');
+        const spinner = document.getElementById('spinner');
+
+        const newEntryDiv = document.createElement('div');
+        newEntryDiv.className = 'bot-entry';
+
+        const content = document.createElement('div');
+        content.className = 'content';
+
+        const userIconSpan = document.createElement('span');
+        userIconSpan.className = 'bot-icon';
+        userIconSpan.innerHTML = '🤖:';
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'bot-response';
+        content.appendChild(userIconSpan);
+        content.appendChild(textSpan);
+        newEntryDiv.appendChild(content);
+
+        conversationDiv.appendChild(newEntryDiv);
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+
+        const ellipsis = '...';
+        textSpan.innerHTML += ellipsis;
+
+        spinner.style.display = 'block';
+        fetch('/figures/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+            },
+        })
+        .then(response => response.text())
+        .then(result => {
+            spinner.style.display = 'none';
+            options.style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('Error triggering generate_graphs:', error);
+            spinner.style.display = 'none';
+        });
+
+        fetch('/generate/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ user_message: question }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            spinner.style.display = 'block';
+            const responseText = data.output;
+
+            const characters = responseText.split('');
+            
+            function displayLetters(index) {
+                if (index < characters.length) {
+                    textSpan.innerHTML += characters[index];
+                    conversationDiv.scrollTop = conversationDiv.scrollHeight;
+                    setTimeout(function () {
+                        displayLetters(index + 1);
+                    }, 25);
+                } else {
+                    send_button.disabled = false;
+                }
+            }
+
+            textSpan.innerHTML = textSpan.innerHTML.slice(0, -ellipsis.length);
+
+            displayLetters(0);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+
+            // Hide spinner in case of an error
+            spinner.style.display = 'none';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const conversationDiv = document.getElementById('conversation');
+        const sendButton = document.getElementById('send_button');
+        const textArea = document.getElementById('text');
+
+        textArea.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                const lastEntry = conversationDiv.lastElementChild;
+                if(sendButton.disabled === false){
+                    send_text();
+                    event.preventDefault();
+                }
+            }
+        });
+    });
+
+    function changeIframe() {
+        var selector = document.getElementById("iframeSelector");
+        var selectedValue = selector.value;
+        let net1 = document.getElementById('net1');
+        let net2 = document.getElementById('net2');
+        let net3 = document.getElementById('net3');
+        let plot2 = document.getElementById('plot2');
+        let plot1 = document.getElementById('plot1');
+        var net1Frame = document.getElementById("net1Frame");
+        var net2Frame = document.getElementById("net2Frame");
+        var net3Frame = document.getElementById("net3Frame");
+        var plot2Frame = document.getElementById("plot2Frame");
+        var plot1Frame = document.getElementById("plot1Frame");
+
+        if(selectedValue === "net1"){
+            net2.style.display = "none"
+            plot2.style.display = "none"
+            plot1.style.display = "none"
+            net3.style.display = "none"
+            net1.style.display = "flex"
+            net1Frame.src = "{% static 'figures/net1.html' %}";
+        }
+        else if(selectedValue === "net2"){
+            net1.style.display = "none"
+            plot2.style.display = "none"
+            plot1.style.display = "none"
+            net3.style.display = "none"
+            net2.style.display = "flex"
+            net2Frame.src = "{% static 'figures/net2.html' %}";
+        }
+        else if(selectedValue === "net3"){
+            net1.style.display = "none"
+            plot2.style.display = "none"
+            plot1.style.display = "none"
+            net2.style.display = "none"
+            net3.style.display = "flex"
+            net3Frame.src = "{% static 'figures/net3.html' %}";
+        }
+        else if(selectedValue === "plot2"){
+            net1.style.display = "none"
+            net2.style.display = "none"
+            plot1.style.display = "none"
+            net3.style.display = "none"
+            plot2.style.display = "flex"
+            plot2Frame.src = "{% static 'figures/plot2.html' %}";
+        }
+        else if(selectedValue === "plot1"){
+            net1.style.display = "none"
+            net2.style.display = "none"
+            plot2.style.display = "none"
+            net3.style.display = "none"
+            plot1.style.display = "flex"
+            plot1Frame.src = "{% static 'figures/plot1.png' %}";
+        }else{
+            net1.style.display = "none"
+            net2.style.display = "none"
+            plot2.style.display = "none"
+            plot1.style.display = "none"
+            net3.style.display = "none"
+        }
+    }
+
+</script>
+
+</html>
